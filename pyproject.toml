@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "my-app"
+name = "django-utm-tracker"
 version = "0.1.0"
-description = "Project template for Django app, using Poetry."
+description = "Django app for extracting and storing UTM tracking values."
 license = "MIT"
 authors = ["YunoJuno <code@yunojuno.com>"]
 maintainers = ["YunoJuno <code@yunojuno.com>"]
 readme = "README.md"
-homepage = "https://github.com/yunojuno/poetry-template"
-repository = "https://github.com/yunojuno/poetry-template"
-documentation = "https://github.com/yunojuno/poetry-template"
+homepage = "https://github.com/yunojuno/django-utm-tracker"
+repository = "https://github.com/yunojuno/django-utm-tracker"
+documentation = "https://github.com/yunojuno/django-utm-tracker"
 classifiers = [
     "Environment :: Web Environment",
     "Framework :: Django",
