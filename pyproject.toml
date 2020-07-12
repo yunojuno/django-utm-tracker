@@ -40,6 +40,7 @@ mypy = "*"
 pre-commit = "*"
 black = "=19.10b0"
 freezegun = "*"
+tox = "*"
 
 [build-system]
 requires = ["poetry>=0.12"]
