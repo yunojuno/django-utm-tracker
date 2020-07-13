@@ -76,6 +76,18 @@ class LeadSource(models.Model):
     timestamp = models.DateTimeField(
         default=timezone.now, help_text="When the event occurred."
     )
+    created_at = models.DateTimeField(
+        default=timezone.now, help_text="When the event was recorded."
+    )
 
     class Meta:
         get_latest_by = ("timestamp",)
+
+    def __str__(self):
+        return f"Lead source {self.id} for {self.user}: {self.medium}/{self.source}"
+
+    def __repr__(self):
+        return (
+            f"<LeadSource id={self.id} user={self.user_id} "
+            f"medium='{self.medium}' source='{self.source}'>"
+        )
