@@ -19,7 +19,15 @@ class UtmSessionMiddleware:
         return self.get_response(request)
 
     def _utm(self, request: HttpRequest) -> Dict[str, str]:
-        """Extract 'utm_*' values from request querystring."""
+        """
+        Extract 'utm_*' values from request querystring.
+
+        NB in the case where there are multiple values for the same key,
+        this will extract the last one. Multiple values for utm_ keys
+        should not appear in valid querystrings, so this may have an
+        unpredictable outcome. Look after your querystrings.
+
+        """
         return {str(k): str(v) for k, v in request.GET.items() if k.startswith("utm_")}
 
 
@@ -31,7 +39,11 @@ class LeadSourceMiddleware:
     will create a new LeadSource object from them, and clear out the values. This
     middleware should come after UtmSessionMiddleware.
 
-    Only authenticated users have a LeadSource created - others
+    Only authenticated users have a LeadSource created - if the user is anonymous
+    then the params are left in the request.session. If the session expires, or
+    is deleted then this will be lost. If the user subsequently logs in, or is
+    registered, then the session data will be retained, and on the first request
+    with an authenticated user the data will be stored.
 
     """
 
