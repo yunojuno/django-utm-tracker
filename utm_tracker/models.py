@@ -83,10 +83,10 @@ class LeadSource(models.Model):
     class Meta:
         get_latest_by = ("timestamp",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Lead source {self.id} for {self.user}: {self.medium}/{self.source}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"<LeadSource id={self.id} user={self.user_id} "
             f"medium='{self.medium}' source='{self.source}'>"
