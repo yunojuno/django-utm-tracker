@@ -38,7 +38,9 @@ class LeadSource(models.Model):
     """
 
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="lead_sources",
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="lead_sources",
     )
     medium = models.CharField(
         max_length=10,

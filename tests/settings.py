@@ -46,6 +46,7 @@ TEMPLATES = [
             "context_processors": [
                 "django.contrib.messages.context_processors.messages",
                 "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.request",
             ]
         },
     }
@@ -67,7 +68,9 @@ LOGGING = {
             "formatter": "simple",
         }
     },
-    "loggers": {"": {"handlers": ["console"], "propagate": True, "level": "DEBUG"},},
+    "loggers": {
+        "": {"handlers": ["console"], "propagate": True, "level": "DEBUG"},
+    },
 }
 
 ROOT_URLCONF = "tests.urls"

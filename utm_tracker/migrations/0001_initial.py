@@ -81,6 +81,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"get_latest_by": ("timestamp",),},
+            options={
+                "get_latest_by": ("timestamp",),
+            },
         ),
     ]
