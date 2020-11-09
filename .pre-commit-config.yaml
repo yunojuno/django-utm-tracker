@@ -8,7 +8,7 @@ repos:
 
     # python code formatting - will amend files
     - repo: https://github.com/ambv/black
-      rev: 19.10b0
+      rev: 20.8b1
       hooks:
           - id: black
             language_version: python3.7

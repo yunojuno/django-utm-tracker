@@ -1,7 +1,11 @@
+from typing import List
+
 from django.http import HttpRequest
 
 
-def request_has_utm_params(request: HttpRequest, required_params=None) -> bool:
+def request_has_utm_params(
+    request: HttpRequest, required_params: List[str] = None
+) -> bool:
     """
     Return True if the request has UTM paramaters we consider valid.
 
