@@ -6,7 +6,6 @@ from django.http import HttpRequest
 
 from utm_tracker.models import LeadSource
 
-
 User = get_user_model()
 
 
@@ -23,8 +22,10 @@ class TestLeadSourceManager:
             "utm_content": "content",
         }
 
-        LeadSource.objects.create_from_request(user=user, request=request)
+        ls_returned = LeadSource.objects.create_from_request(user=user, request=request)
+
         ls = LeadSource.objects.get()
+        assert ls == ls_returned
 
         assert ls.user == user
         assert ls.medium == "medium"

@@ -1,17 +1,21 @@
 from __future__ import annotations
 
+from typing import Type
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.base import Model
 from django.http import HttpRequest
 from django.utils import timezone
-
 
 User = get_user_model()
 
 
 class LeadSourceManager(models.Manager):
-    def create_from_request(self, user: User, request: HttpRequest) -> LeadSource:
+    def create_from_request(
+        self, user: Type[Model], request: HttpRequest
+    ) -> LeadSource:
         """
         Persist a LeadSource from an inbound HTTP Request.
 
@@ -23,7 +27,7 @@ class LeadSourceManager(models.Manager):
         sometimes we want to persist a LeadSource against a known user from
         an unauthenticated request.
         """
-        LeadSource.objects.create(
+        return LeadSource.objects.create(
             user=user,
             medium=request.session.pop("utm_medium"),
             source=request.session.pop("utm_source"),
