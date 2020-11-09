@@ -1,7 +1,6 @@
 from unittest import mock
 
 import pytest
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest, HttpResponse
@@ -35,21 +34,6 @@ class TestUtmSessionMiddleware:
 
 
 class TestLeadSourceMiddleware:
-    @pytest.mark.parametrize(
-        "medium,source,result",
-        (
-            ("", "", False),
-            ("foo", "", False),
-            ("", "bar", False),
-            ("foo", "bar", True),
-        ),
-    )
-    def test_has_utm(self, medium, source, result):
-        request = mock.Mock(spec=HttpRequest)
-        request.session = {"utm_medium": medium, "utm_source": source}
-        middleware = LeadSourceMiddleware(lambda r: HttpResponse())
-        assert middleware.has_utm(request) == result
-
     @pytest.mark.django_db
     def test_capture_lead_source(self):
         user = User.objects.create(username="Bob")

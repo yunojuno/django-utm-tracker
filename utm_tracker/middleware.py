@@ -4,6 +4,7 @@ from typing import Callable, Dict
 from django.http import HttpRequest, HttpResponse
 
 from .models import LeadSource
+from .request import request_has_utm_params
 
 logger = logging.getLogger(__name__)
 
@@ -50,36 +51,14 @@ class LeadSourceMiddleware:
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]):
         self.get_response = get_response
 
-    def has_utm(self, request: HttpRequest) -> bool:
-        """Return True if the request has valid UTM params in session."""
-        return all(
-            [
-                request.session.get("utm_medium", ""),
-                request.session.get("utm_source", ""),
-            ]
-        )
-
     def capture_lead_source(self, request: HttpRequest) -> None:
-        """
-        Capture a new LeadSource from request UTM values.
-
-        This method 'pop's the values from the session - so they will be deleted
-        from hereon.
-
-        """
+        """Capture a new LeadSource from request UTM values."""
         try:
-            LeadSource.objects.create(
-                user=request.user,
-                medium=request.session.pop("utm_medium"),
-                source=request.session.pop("utm_source"),
-                campaign=request.session.pop("utm_campaign", ""),
-                term=request.session.pop("utm_term", ""),
-                content=request.session.pop("utm_content", ""),
-            )
+            LeadSource.objects.create_from_request(user=request.user, request=request)
         except Exception as ex:  # pylint: disable=broad-except
             logger.warning("Error creating LeadSource: %s", ex)
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
-        if request.user.is_authenticated and self.has_utm(request):
+        if request.user.is_authenticated and request_has_utm_params(request):
             self.capture_lead_source(request)
         return self.get_response(request)
