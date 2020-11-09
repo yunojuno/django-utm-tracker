@@ -1,6 +1,40 @@
+from __future__ import annotations
+
+from typing import Type
+
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.base import Model
+from django.http import HttpRequest
 from django.utils import timezone
+
+User = get_user_model()
+
+
+class LeadSourceManager(models.Manager):
+    def create_from_request(
+        self, user: Type[Model], request: HttpRequest
+    ) -> LeadSource:
+        """
+        Persist a LeadSource from an inbound HTTP Request.
+
+        This method 'pop's the values from the Django Session deliberately,
+        so that when a LeadSource is persisted - the session is cleared. This
+        is so we do not persist a new LeadSource on every request.
+
+        NB: We deliberately do not take the User off the request object as
+        sometimes we want to persist a LeadSource against a known user from
+        an unauthenticated request.
+        """
+        return LeadSource.objects.create(
+            user=user,
+            medium=request.session.pop("utm_medium"),
+            source=request.session.pop("utm_source"),
+            campaign=request.session.pop("utm_campaign", ""),
+            term=request.session.pop("utm_term", ""),
+            content=request.session.pop("utm_content", ""),
+        )
 
 
 class LeadSource(models.Model):
@@ -81,6 +115,8 @@ class LeadSource(models.Model):
     created_at = models.DateTimeField(
         default=timezone.now, help_text="When the event was recorded."
     )
+
+    objects = LeadSourceManager()
 
     class Meta:
         get_latest_by = ("timestamp",)
