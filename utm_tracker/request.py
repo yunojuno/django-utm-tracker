@@ -1,23 +1,28 @@
-from typing import List
-
 from django.http import HttpRequest
 
+from .types import UtmParamsDict
 
-def request_has_utm_params(
-    request: HttpRequest, required_params: List[str] = None
-) -> bool:
+VALID_UTM_PARAMS = [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+]
+
+
+def parse_qs(request: HttpRequest) -> UtmParamsDict:
     """
-    Return True if the request has UTM paramaters we consider valid.
+    Extract 'utm_*' values from request querystring.
 
-    This function should be called before automatically persisting a
-    LeadSource, to ensure that one is only persisted when enough valid
-    UTM parameters exist for it to make sense.
+    NB in the case where there are multiple values for the same key,
+    this will extract the last one. Multiple values for utm_ keys
+    should not appear in valid querystrings, so this may have an
+    unpredictable outcome. Look after your querystrings.
 
-    The `required_params` parameter can be overriden on a per-call basis to
-    decide which parameters should be required for a given call. We provide
-    a sane default.
     """
-    required_params = required_params or ["utm_source", "utm_medium"]
-
-    required_values = [request.session.get(param, "") for param in required_params]
-    return all(required_values)
+    return {
+        str(k): str(v)
+        for k, v in request.GET.items()
+        if k in VALID_UTM_PARAMS and v != ""
+    }

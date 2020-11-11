@@ -1,10 +1,10 @@
 import logging
-from typing import Callable, Dict
+from typing import Callable
 
 from django.http import HttpRequest, HttpResponse
 
-from .models import LeadSource
-from .request import request_has_utm_params
+from .request import parse_qs
+from .session import flush_utm_params, stash_utm_params
 
 logger = logging.getLogger(__name__)
 
@@ -16,20 +16,8 @@ class UtmSessionMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
-        request.session.update(self._utm(request))
+        stash_utm_params(request.session, parse_qs(request))
         return self.get_response(request)
-
-    def _utm(self, request: HttpRequest) -> Dict[str, str]:
-        """
-        Extract 'utm_*' values from request querystring.
-
-        NB in the case where there are multiple values for the same key,
-        this will extract the last one. Multiple values for utm_ keys
-        should not appear in valid querystrings, so this may have an
-        unpredictable outcome. Look after your querystrings.
-
-        """
-        return {str(k): str(v) for k, v in request.GET.items() if k.startswith("utm_")}
 
 
 class LeadSourceMiddleware:
@@ -51,14 +39,11 @@ class LeadSourceMiddleware:
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]):
         self.get_response = get_response
 
-    def capture_lead_source(self, request: HttpRequest) -> None:
-        """Capture a new LeadSource from request UTM values."""
-        try:
-            LeadSource.objects.create_from_request(user=request.user, request=request)
-        except Exception as ex:  # pylint: disable=broad-except
-            logger.warning("Error creating LeadSource: %s", ex)
-
     def __call__(self, request: HttpRequest) -> HttpResponse:
-        if request.user.is_authenticated and request_has_utm_params(request):
-            self.capture_lead_source(request)
+        if request.user.is_authenticated:
+            try:
+                flush_utm_params(request.user, request.session)
+            except:  # noqa E722
+                logger.exception("Error flushing utm_params from request")
+
         return self.get_response(request)

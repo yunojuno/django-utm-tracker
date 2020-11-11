@@ -3,17 +3,18 @@ from unittest import mock
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.sessions.backends.base import SessionBase
 from django.http import HttpRequest, HttpResponse
 from django.test import Client
 
 from utm_tracker.middleware import LeadSourceMiddleware, UtmSessionMiddleware
-from utm_tracker.models import LeadSource
+from utm_tracker.session import SESSION_KEY_UTM_PARAMS
 
 User = get_user_model()
 
 
 class TestUtmSessionMiddleware:
-    @mock.patch.object(UtmSessionMiddleware, "_utm")
+    @mock.patch("utm_tracker.middleware.parse_qs")
     def test_middleware(self, mock_utm):
         request = mock.Mock(spec=HttpRequest)
         request.session = {}
@@ -26,64 +27,50 @@ class TestUtmSessionMiddleware:
         }
         middleware = UtmSessionMiddleware(lambda r: HttpResponse())
         middleware(request)
-        assert request.session["utm_medium"] == "medium"
-        assert request.session["utm_source"] == "source"
-        assert request.session["utm_campaign"] == "campaign"
-        assert request.session["utm_term"] == "term"
-        assert request.session["utm_content"] == "content"
+        assert len(request.session[SESSION_KEY_UTM_PARAMS]) == 1
+        utm_params = request.session[SESSION_KEY_UTM_PARAMS][0]
+        assert utm_params["utm_medium"] == "medium"
+        assert utm_params["utm_source"] == "source"
+        assert utm_params["utm_campaign"] == "campaign"
+        assert utm_params["utm_term"] == "term"
+        assert utm_params["utm_content"] == "content"
+
+    @mock.patch("utm_tracker.middleware.parse_qs")
+    def test_middleware__no_params(self, mock_utm):
+        request = mock.Mock(spec=HttpRequest)
+        request.session = {}
+        mock_utm.return_value = {}
+        middleware = UtmSessionMiddleware(lambda r: HttpResponse())
+        middleware(request)
+        assert SESSION_KEY_UTM_PARAMS not in request.session
 
 
 class TestLeadSourceMiddleware:
-    @pytest.mark.django_db
-    def test_capture_lead_source(self):
-        user = User.objects.create(username="Bob")
-        request = mock.Mock(spec=HttpRequest, user=user)
-        request.session = {
-            "utm_medium": "medium",
-            "utm_source": "source",
-            "utm_campaign": "campaign",
-            "utm_term": "term",
-            "utm_content": "content",
-        }
-        middleware = LeadSourceMiddleware(lambda r: HttpResponse())
-        middleware.capture_lead_source(request)
-        ls = LeadSource.objects.get()
-        assert ls.user == request.user
-        assert ls.medium == "medium"
-        assert ls.source == "source"
-        assert ls.campaign == "campaign"
-        assert ls.term == "term"
-        assert ls.content == "content"
-        # ensure we have cleared out the session
-        assert request.session == {}
-
-    @pytest.mark.django_db
-    def test_capture_lead_source__exception(self):
-        """Check that db errors don't kill middleware."""
-        request = mock.Mock(spec=HttpRequest)
-        request.session = {}  # empty session will cause capture_lead_source to blow
-        middleware = LeadSourceMiddleware(lambda r: HttpResponse())
-        middleware.capture_lead_source(request)
-        assert LeadSource.objects.count() == 0
-
-    @pytest.mark.django_db
-    @pytest.mark.parametrize(
-        "utm,authenticated,captured",
-        (
-            ("", False, False),
-            ("utm", False, False),
-            ("", True, False),
-            ("utm", True, True),
-        ),
-    )
-    @mock.patch.object(LeadSourceMiddleware, "capture_lead_source")
-    def test_middleware(self, mock_capture, utm, authenticated, captured):
-        user = User() if authenticated else AnonymousUser()
-        session = {"utm_medium": utm, "utm_source": utm}
-        request = mock.Mock(spec=HttpRequest, user=user, session=session)
+    @mock.patch("utm_tracker.middleware.flush_utm_params")
+    def test_middleware__unauthenticated(self, mock_flush):
+        request = mock.Mock(spec=HttpRequest, user=AnonymousUser())
+        assert not request.user.is_authenticated
         middleware = LeadSourceMiddleware(lambda r: HttpResponse())
         middleware(request)
-        assert (mock_capture.call_count == 1) == captured
+        assert mock_flush.call_count == 0
+
+    @mock.patch("utm_tracker.middleware.flush_utm_params")
+    def test_middleware__authenticated(self, mock_flush):
+        session = mock.Mock(SessionBase)
+        request = mock.Mock(spec=HttpRequest, user=User(), session=session)
+        middleware = LeadSourceMiddleware(lambda r: HttpResponse())
+        middleware(request)
+        assert mock_flush.call_count == 1
+        mock_flush.assert_called_once_with(request.user, session)
+
+    @mock.patch("utm_tracker.middleware.flush_utm_params")
+    def test_middleware__error(self, mock_flush):
+        session = mock.Mock(SessionBase)
+        request = mock.Mock(spec=HttpRequest, user=User(), session=session)
+        mock_flush.side_effect = Exception("Panic")
+        middleware = LeadSourceMiddleware(lambda r: HttpResponse())
+        middleware(request)
+        assert mock_flush.call_count == 1
 
 
 @pytest.mark.django_db
@@ -94,30 +81,47 @@ def test_utm_and_lead_source():
 
     # Initial request is unauthenticated - qs params are stashed in the session,
     # but no LeadSource is created, as we don't have a user at this point.
+    client.get("/?utm_medium=medium1" "&utm_source=source1" "&foo=bar")
+    utm_params = client.session[SESSION_KEY_UTM_PARAMS]
+    assert len(utm_params) == 1
+    assert utm_params[0]["utm_medium"] == "medium1"
+    assert utm_params[0]["utm_source"] == "source1"
+
+    # second unauthenticated request - should be appended
     client.get(
-        "/?utm_medium=medium"
-        "&utm_source=source"
-        "&utm_campaign=campaign"
-        "&utm_term=term"
-        "&utm_content=content"
+        "/?utm_medium=medium2"
+        "&utm_source=source2"
+        "&utm_campaign=campaign2"
+        "&utm_term=term2"
+        "&utm_content=content2"
         "&foo=bar"
     )
-    assert client.session["utm_medium"] == "medium"
-    assert client.session["utm_source"] == "source"
-    assert client.session["utm_campaign"] == "campaign"
-    assert client.session["utm_term"] == "term"
-    assert client.session["utm_content"] == "content"
+    utm_params = client.session[SESSION_KEY_UTM_PARAMS]
+    assert utm_params[1]["utm_medium"] == "medium2"
+    assert utm_params[1]["utm_source"] == "source2"
+    assert utm_params[1]["utm_campaign"] == "campaign2"
+    assert utm_params[1]["utm_term"] == "term2"
+    assert utm_params[1]["utm_content"] == "content2"
     assert not user.lead_sources.exists()
 
     # Subsequent request, we force a login, so that we have a user - at which
     # point we should capture the LeadSource, and clear the session.
     client.force_login(user)
     client.get("/")
-    ls = user.lead_sources.get()
-    assert ls.medium == "medium"
-    assert ls.source == "source"
-    assert ls.campaign == "campaign"
-    assert ls.term == "term"
-    assert ls.content == "content"
+    ls = user.lead_sources.count() == 2
+    ls = user.lead_sources.first()
+    assert ls.medium == "medium1"
+    assert ls.source == "source1"
+    assert ls.campaign == ""
+    assert ls.term == ""
+    assert ls.content == ""
+
+    ls = user.lead_sources.last()
+    assert ls.medium == "medium2"
+    assert ls.source == "source2"
+    assert ls.campaign == "campaign2"
+    assert ls.term == "term2"
+    assert ls.content == "content2"
+
     # session is empty now
-    assert not [k for k in client.session.keys() if k.startswith("utm")]
+    assert not client.session.get(SESSION_KEY_UTM_PARAMS)
