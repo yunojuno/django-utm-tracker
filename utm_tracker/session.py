@@ -1,3 +1,4 @@
+import logging
 from typing import Any, List
 
 from django.contrib.sessions.backends.base import SessionBase
@@ -6,6 +7,8 @@ from .models import LeadSource
 from .types import UtmParamsDict
 
 SESSION_KEY_UTM_PARAMS = "utm_params"
+
+logger = logging.getLogger(__name__)
 
 
 def stash_utm_params(session: SessionBase, params: UtmParamsDict) -> bool:
@@ -42,5 +45,8 @@ def flush_utm_params(user: Any, session: SessionBase) -> List[LeadSource]:
     """
     created = []
     for params in pop_utm_params(session):
-        created.append(LeadSource.objects.create_from_utm_params(user, params))
+        try:
+            created.append(LeadSource.objects.create_from_utm_params(user, params))
+        except ValueError as ex:
+            logger.debug(f"Unable to save utm_params: {params}: {ex}")
     return created
