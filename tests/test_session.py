@@ -2,7 +2,7 @@ from utm_tracker.models import LeadSource
 import pytest
 from django.contrib.auth import get_user_model
 
-from utm_tracker.session import SESSION_KEY_UTM_PARAMS, flush_utm_params, stash_utm_params
+from utm_tracker.session import SESSION_KEY_UTM_PARAMS, dump_utm_params, stash_utm_params
 
 User = get_user_model()
 
@@ -22,14 +22,14 @@ def test_stash_utm_params():
 
 
 @pytest.mark.django_db
-def test_flush_utm_params():
+def test_dump_utm_params():
     user = User.objects.create()
     utm_params1 = {"utm_medium": "medium1", "utm_source": "source1"}
     utm_params2 = {"utm_medium": "medium2", "utm_source": "source2"}
     session = {
         SESSION_KEY_UTM_PARAMS: [utm_params1, utm_params2]
     }
-    created = flush_utm_params(user, session)
+    created = dump_utm_params(user, session)
     assert LeadSource.objects.count() == 2
     first = LeadSource.objects.first()
     last = LeadSource.objects.last()
@@ -39,7 +39,7 @@ def test_flush_utm_params():
 
 
 @pytest.mark.django_db
-def test_flush_utm_params__error():
+def test_dump_utm_params__error():
     """Check that if one utm_params fail, others continue."""
     user = User.objects.create()
     utm_params1 = {"utm_mediumx": "medium1", "utm_source": "source1"}
@@ -47,7 +47,7 @@ def test_flush_utm_params__error():
     session = {
         SESSION_KEY_UTM_PARAMS: [utm_params1, utm_params2]
     }
-    created = flush_utm_params(user, session)
+    created = dump_utm_params(user, session)
     # only one object will be stored
     source = LeadSource.objects.get()
     assert source.medium == 'medium2'

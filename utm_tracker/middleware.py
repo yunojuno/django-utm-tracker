@@ -4,7 +4,7 @@ from typing import Callable
 from django.http import HttpRequest, HttpResponse
 
 from .request import parse_qs
-from .session import flush_utm_params, stash_utm_params
+from .session import dump_utm_params, stash_utm_params
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ class LeadSourceMiddleware:
     def __call__(self, request: HttpRequest) -> HttpResponse:
         if request.user.is_authenticated:
             try:
-                flush_utm_params(request.user, request.session)
+                dump_utm_params(request.user, request.session)
             except:  # noqa E722
                 logger.exception("Error flushing utm_params from request")
 

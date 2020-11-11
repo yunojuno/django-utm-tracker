@@ -32,7 +32,7 @@ def pop_utm_params(session: SessionBase) -> List[UtmParamsDict]:
     return session.pop(SESSION_KEY_UTM_PARAMS, [])
 
 
-def flush_utm_params(user: Any, session: SessionBase) -> List[LeadSource]:
+def dump_utm_params(user: Any, session: SessionBase) -> List[LeadSource]:
     """
     Flush utm_params from the session and save as LeadSource objects.
 

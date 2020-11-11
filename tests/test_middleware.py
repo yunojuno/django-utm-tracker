@@ -46,7 +46,7 @@ class TestUtmSessionMiddleware:
 
 
 class TestLeadSourceMiddleware:
-    @mock.patch("utm_tracker.middleware.flush_utm_params")
+    @mock.patch("utm_tracker.middleware.dump_utm_params")
     def test_middleware__unauthenticated(self, mock_flush):
         request = mock.Mock(spec=HttpRequest, user=AnonymousUser())
         assert not request.user.is_authenticated
@@ -54,7 +54,7 @@ class TestLeadSourceMiddleware:
         middleware(request)
         assert mock_flush.call_count == 0
 
-    @mock.patch("utm_tracker.middleware.flush_utm_params")
+    @mock.patch("utm_tracker.middleware.dump_utm_params")
     def test_middleware__authenticated(self, mock_flush):
         session = mock.Mock(SessionBase)
         request = mock.Mock(spec=HttpRequest, user=User(), session=session)
@@ -63,7 +63,7 @@ class TestLeadSourceMiddleware:
         assert mock_flush.call_count == 1
         mock_flush.assert_called_once_with(request.user, session)
 
-    @mock.patch("utm_tracker.middleware.flush_utm_params")
+    @mock.patch("utm_tracker.middleware.dump_utm_params")
     def test_middleware__error(self, mock_flush):
         session = mock.Mock(SessionBase)
         request = mock.Mock(spec=HttpRequest, user=User(), session=session)
