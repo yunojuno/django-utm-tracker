@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def stash_utm_params(session: SessionBase, params: UtmParamsDict) -> bool:
     """
-    Add a new utm_params dictionary to the session.
+    Add new utm_params to the list of utm_params in the session.
 
     If the params dict is empty ({}), then it is ignored.
 
