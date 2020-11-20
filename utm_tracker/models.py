@@ -68,7 +68,7 @@ class LeadSource(models.Model):
         related_name="lead_sources",
     )
     medium = models.CharField(
-        max_length=10,
+        max_length=30,
         help_text=(
             "utm_medium: Identifies what type of link was used, "
             "such as cost per click or email."
