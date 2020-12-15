@@ -61,6 +61,6 @@ def referral(request, token):
 
 ## Configuration
 
-Add the app to `INSTALLED_APPS`, and add both middleware classes to `MIDDLEWARE`.
+Add the `'utm_tracker'` app to `INSTALLED_APPS`, and add both middleware classes (`'utm_tracker.middleware.UtmSessionMiddleware'` and `'utm_tracker.middleware.LeadSourceMiddleware'`) to `MIDDLEWARE`.
 
 The `UtmSession` middleware must come before `LeadSource` middleware.
