@@ -15,16 +15,20 @@ def stash_utm_params(session: SessionBase, params: UtmParamsDict) -> bool:
     """
     Add new utm_params to the list of utm_params in the session.
 
-    If the params dict is empty ({}), then it is ignored.
+    If the params dict is empty ({}), or already stashed in the session,
+    then it's ignored.
 
-    Returns True if the params are stored, else False.
+    Returns True if the params are stored.
 
     """
-    if params:
-        session.setdefault(SESSION_KEY_UTM_PARAMS, [])
-        session[SESSION_KEY_UTM_PARAMS].append(params)
-        return True
-    return False
+    if not params:
+        return False
+
+    session.setdefault(SESSION_KEY_UTM_PARAMS, [])
+    if params in session[SESSION_KEY_UTM_PARAMS]:
+        return False
+    session[SESSION_KEY_UTM_PARAMS].append(params)
+    return True
 
 
 def pop_utm_params(session: SessionBase) -> List[UtmParamsDict]:
