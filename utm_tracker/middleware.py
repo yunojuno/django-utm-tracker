@@ -2,6 +2,7 @@ import logging
 from typing import Callable
 
 from django.http import HttpRequest, HttpResponse
+from request_log.models import RequestLog
 
 from .request import parse_qs
 from .session import dump_utm_params, stash_utm_params
@@ -16,7 +17,19 @@ class UtmSessionMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
+        utm_params = parse_qs(request)
+        if not utm_params:
+            return self.get_response(request)
+        log = RequestLog.objects.create_log(request)
         stash_utm_params(request.session, parse_qs(request))
+        if not request.session.session_key:
+            request.session["LOG_ON_NEXT_REQUEST"] = log.id
+            return self.get_response(request)
+
+        if (log_id := request.session.pop("LOG_ON_NEXT_REQUEST", None)):
+            log = RequestLog.objects.get(id=log_id)
+            log.session_key = request.session.session_key
+            log.save()
         return self.get_response(request)
 
 

@@ -2,6 +2,7 @@ import logging
 from typing import Any, List
 
 from django.contrib.sessions.backends.base import SessionBase
+from django.http.request import HttpRequest
 
 from .models import LeadSource
 from .types import UtmParamsDict
@@ -28,6 +29,8 @@ def stash_utm_params(session: SessionBase, params: UtmParamsDict) -> bool:
     if params in session[SESSION_KEY_UTM_PARAMS]:
         return False
     session[SESSION_KEY_UTM_PARAMS].append(params)
+    # force it to save that anonymous users get a session_key
+    session.modified = True
     return True
 
 
@@ -50,7 +53,9 @@ def dump_utm_params(user: Any, session: SessionBase) -> List[LeadSource]:
     created = []
     for params in pop_utm_params(session):
         try:
-            created.append(LeadSource.objects.create_from_utm_params(user, params))
+            created.append(
+                LeadSource.objects.create_from_utm_params(user, session, params)
+            )
         except ValueError as ex:
             logger.debug(f"Unable to save utm_params: {params}: {ex}")
     return created

@@ -26,6 +26,7 @@ packages = [{include="utm_tracker"}]
 [tool.poetry.dependencies]
 python = "^3.7"
 django = "^2.2 || ^3.0"
+django-request-log = "^0.0.12"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
