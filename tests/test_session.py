@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
+from django.contrib.sessions.backends.base import SessionBase
 
 from utm_tracker.models import LeadSource
 from utm_tracker.session import (
@@ -12,10 +13,11 @@ User = get_user_model()
 
 
 def test_stash_utm_params():
-    session = {}
+    session = SessionBase()
     assert not stash_utm_params(session, {})
 
     assert stash_utm_params(session, {"utm_medium": "foo"})
+    assert session.modified
     assert len(session[SESSION_KEY_UTM_PARAMS]) == 1
     assert session[SESSION_KEY_UTM_PARAMS][0] == {"utm_medium": "foo"}
 

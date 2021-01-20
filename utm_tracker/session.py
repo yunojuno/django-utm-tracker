@@ -28,6 +28,9 @@ def stash_utm_params(session: SessionBase, params: UtmParamsDict) -> bool:
     if params in session[SESSION_KEY_UTM_PARAMS]:
         return False
     session[SESSION_KEY_UTM_PARAMS].append(params)
+    # because we are adding to a list, we are not actually changing the
+    # session object itself, so we need to force it to be saved.
+    session.modified = True
     return True
 
 
