@@ -22,7 +22,7 @@ def parse_qs(request: HttpRequest) -> UtmParamsDict:
 
     """
     return {
-        str(k): str(v)
+        str(k).lower(): str(v).lower()
         for k, v in request.GET.items()
         if k in VALID_UTM_PARAMS and v != ""
     }

@@ -27,8 +27,8 @@ def test_pars_qs__ignores_non_utm():
 def test_pars_qs__ignores_empty_fields():
     request = mock.Mock(spec=HttpRequest)
     request.GET = {
-        "utm_source": "source",
-        "utm_medium": "medium",
+        "utm_source": "Source",
+        "utm_medium": "Medium",
         "utm_campaign": "",
         "utm_term": "",
         "utm_content": "",
