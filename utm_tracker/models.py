@@ -97,9 +97,10 @@ class LeadSource(models.Model):
     gclid = models.CharField(
         max_length=255,
         help_text=(
-            "Identifies a google click, is used for ad tracking in Google Analytics via Google Ads"
+            "Identifies a google click, is used for ad tracking"
+            " in Google Analytics via Google Ads"
         ),
-        blank=True
+        blank=True,
     )
     content = models.CharField(
         max_length=50,

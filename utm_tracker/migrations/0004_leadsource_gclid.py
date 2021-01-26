@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('utm_tracker', '0003_increase_medium_chars'),
+        ("utm_tracker", "0003_increase_medium_chars"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='leadsource',
-            name='gclid',
-            field=models.CharField(blank=True, help_text='Identifies a google click, is used for ad tracking in Google Analytics via Google Ads', max_length=255),
+            model_name="leadsource",
+            name="gclid",
+            field=models.CharField(
+                blank=True,
+                help_text="Identifies a google click, is used for ad tracking in Google Analytics via Google Ads",
+                max_length=255,
+            ),
         ),
     ]
