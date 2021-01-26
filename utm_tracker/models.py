@@ -23,6 +23,7 @@ class LeadSourceManager(models.Manager):
                 campaign=utm_params.get("utm_campaign", ""),
                 term=utm_params.get("utm_term", ""),
                 content=utm_params.get("utm_content", ""),
+                gclid=utm_params.get("gclid", ""),
             )
         except KeyError as ex:
             raise ValueError(f"Missing utm param: {ex}")
@@ -91,6 +92,14 @@ class LeadSource(models.Model):
     )
     term = models.CharField(
         max_length=50, help_text="utm_term: Identifies search terms.", blank=True
+    )
+
+    gclid = models.CharField(
+        max_length=255,
+        help_text=(
+            "Identifies a google click, is used for ad tracking in Google Analytics via Google Ads"
+        ),
+        blank=True
     )
     content = models.CharField(
         max_length=50,

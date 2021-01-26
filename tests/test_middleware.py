@@ -24,6 +24,7 @@ class TestUtmSessionMiddleware:
             "utm_campaign": "campaign",
             "utm_term": "term",
             "utm_content": "content",
+            "gclid": "1C5CHFA_enGB874GB874",
         }
         middleware = UtmSessionMiddleware(lambda r: HttpResponse())
         middleware(request)
@@ -34,6 +35,7 @@ class TestUtmSessionMiddleware:
         assert utm_params["utm_campaign"] == "campaign"
         assert utm_params["utm_term"] == "term"
         assert utm_params["utm_content"] == "content"
+        assert utm_params["gclid"] == "1C5CHFA_enGB874GB874"
 
     @mock.patch("utm_tracker.middleware.parse_qs")
     def test_middleware__no_params(self, mock_utm):
