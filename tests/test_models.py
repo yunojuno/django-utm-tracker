@@ -15,7 +15,7 @@ def test_create_from_utm_params():
         "utm_campaign": "campaign",
         "utm_term": "term",
         "utm_content": "content",
-        "gcdid": "1C5CHFA_enGB874GB874",
+        "gclid": "1C5CHFA_enGB874GB874",
     }
 
     ls_returned = LeadSource.objects.create_from_utm_params(user, utm_params)
