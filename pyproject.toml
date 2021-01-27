@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-utm-tracker"
-version = "0.5.3"
+version = "0.6"
 description = "Django app for extracting and storing UTM tracking values."
 license = "MIT"
 authors = ["YunoJuno <code@yunojuno.com>"]
