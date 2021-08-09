@@ -55,13 +55,13 @@ class IntegrationTests(TestCase):
     def test_dump_params(self):
         user = User.objects.create(username="fred")
         self.client.get(
-            "/200/?utm_medium=medium1&utm_source=source1&gclid=1C5CHFA_enGB874GB874"
+            "/200/?utm_medium=medium1&utm_source=source1&gclid=1C5CHFA_enGB874GB874&aclk=ZASdENGG&twclid=SADFDdfaa&fbclid=ASrdfBB&msclkid=AbbbbasdasdD"
         )
         assert not LeadSource.objects.exists()
 
         self.client.force_login(user)
         self.client.get(
-            "/200/?utm_medium=medium2&utm_source=source2&gclid=1C5CHFA_enGB874GB874222"
+            "/200/?utm_medium=medium2&utm_source=source2&gclid=1C5CHFA_enGB874GB874222&aclk=ZASdENGG&twclid=SADFDdfaa&fbclid=ASrdfBB&msclkid=AbbbbasdasdD"
         )
         assert SESSION_KEY_UTM_PARAMS not in self.client.session
         # implicit test that there are exactly two objects created
@@ -69,6 +69,9 @@ class IntegrationTests(TestCase):
         assert ls1.medium == "medium1"
         assert ls1.source == "source1"
         assert ls1.gclid == "1C5CHFA_enGB874GB874"
-        assert ls2.medium == "medium2"
+        assert ls1.aclk == "ZASdENGG"
+        assert ls1.msclkid == "AbbbbasdasdD"
+        assert ls1.twclid == "SADFDdfaa"
+        assert ls2.fbclid == "ASrdfBB"
         assert ls2.source == "source2"
         assert ls2.gclid == "1C5CHFA_enGB874GB874222"
