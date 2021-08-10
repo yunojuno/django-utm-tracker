@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Type
-
 from django.conf import settings
 from django.db import models
 from django.db.models.base import Model
@@ -12,7 +10,7 @@ from .types import UtmParamsDict
 
 class LeadSourceManager(models.Manager):
     def create_from_utm_params(
-        self, user: Type[Model], utm_params: UtmParamsDict
+        self, user: type[Model], utm_params: UtmParamsDict
     ) -> LeadSource:
         """Persist a LeadSource dictionary of utm_* values."""
         try:
