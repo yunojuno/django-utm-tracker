@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-utm-tracker"
-version = "0.6"
+version = "0.6.1"
 description = "Django app for extracting and storing UTM tracking values."
 license = "MIT"
 authors = ["YunoJuno <code@yunojuno.com>"]
@@ -15,6 +15,7 @@ classifiers = [
     "Framework :: Django :: 2.2",
     "Framework :: Django :: 3.0",
     "Framework :: Django :: 3.1",
+    "Framework :: Django :: 3.2",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
@@ -29,19 +30,20 @@ python = "^3.7"
 django = "^2.2 || ^3.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "*"
-pytest-cov = "*"
-pytest-django = "*"
+black = {version = "*", allow-prereleases = true}
 coverage = "*"
-pylint = "*"
 flake8 = "*"
 flake8-bandit = "*"
 flake8-docstrings = "*"
+flake8-print = "*"
+freezegun = "*"
 isort = "*"
 mypy = "*"
 pre-commit = "*"
-black = {version = "*", allow-prereleases = true}
-freezegun = "*"
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-django = "*"
 tox = "*"
 
 [build-system]
