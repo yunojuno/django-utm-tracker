@@ -22,6 +22,10 @@ class LeadSourceManager(models.Manager):
                 term=utm_params.get("utm_term", ""),
                 content=utm_params.get("utm_content", ""),
                 gclid=utm_params.get("gclid", ""),
+                msclkid=utm_params.get("msclkid", ""),
+                aclk=utm_params.get("aclk", ""),
+                twclid=utm_params.get("twclid", ""),
+                fbclid=utm_params.get("fbclid", ""),
             )
         except KeyError as ex:
             raise ValueError(f"Missing utm param: {ex}")
@@ -98,6 +102,28 @@ class LeadSource(models.Model):
             "Identifies a google click, is used for ad tracking"
             " in Google Analytics via Google Ads"
         ),
+        blank=True,
+    )
+    aclk = models.CharField(
+        max_length=255,
+        help_text=("Identifies a Microsoft Ad click (bing), is used for ad tracking."),
+        blank=True,
+    )
+    msclkid = models.CharField(
+        max_length=255,
+        help_text=(
+            "Identifies a Microsoft Ad click (MS ad network), is used for ad tracking."
+        ),
+        blank=True,
+    )
+    twclid = models.CharField(
+        max_length=255,
+        help_text=("Identifies a Twitter Ad click, is used for ad tracking."),
+        blank=True,
+    )
+    fbclid = models.CharField(
+        max_length=255,
+        help_text=("Identifies a Facebook Ad click, is used for ad tracking."),
         blank=True,
     )
     content = models.CharField(

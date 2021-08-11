@@ -16,6 +16,10 @@ def test_create_from_utm_params():
         "utm_term": "term",
         "utm_content": "content",
         "gclid": "1C5CHFA_enGB874GB874",
+        "aclk": "2C5CHFA_enGB874GB874",
+        "msclkid": "3C5CHFA_enGB874GB874",
+        "twclid": "4C5CHFA_enGB874GB874",
+        "fbclid": "5C5CHFA_enGB874GB874",
     }
 
     ls_returned = LeadSource.objects.create_from_utm_params(user, utm_params)
@@ -30,6 +34,10 @@ def test_create_from_utm_params():
     assert ls.term == "term"
     assert ls.content == "content"
     assert ls.gclid == "1C5CHFA_enGB874GB874"
+    assert ls.aclk == "2C5CHFA_enGB874GB874"
+    assert ls.msclkid == "3C5CHFA_enGB874GB874"
+    assert ls.twclid == "4C5CHFA_enGB874GB874"
+    assert ls.fbclid == "5C5CHFA_enGB874GB874"
 
 
 @pytest.mark.django_db

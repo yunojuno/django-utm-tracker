@@ -27,8 +27,11 @@ def parse_qs(request: HttpRequest) -> UtmParamsDict:
         if k in VALID_UTM_PARAMS and v != ""
     }
 
-    if gclid := request.GET.get("gclid"):
-        # We don't want to lowercase the gclid
-        utm_keys["gclid"] = gclid
+    ad_keys = ["gclid", "aclk", "msclkid", "fbclid", "twclid"]
+    for ad_key in ad_keys:
+        if akey := request.GET.get(ad_key):
+            # We don't want to lowercase the ad key, as they are
+            # typically BASE64 encoded
+            utm_keys[ad_key] = akey
 
     return utm_keys
