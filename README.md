@@ -14,6 +14,20 @@ to a campaign advert.
 This may be useful if you are trying to assess the value of multiple channels /
 campaigns.
 
+### Supported querystring parameters
+
+Parameter | Definition
+:-- | :--
+utm_medium | Identifies what type of link was used.
+utm_source | Identifies which site sent the traffic, and is a required parameter.
+utm_campaign | Identifies a specific product promotion or strategic campaign.
+utm_term | Identifies search terms.
+gclid | Identifies a google click, is used for ad tracking in Google Analytics via Google Ads.
+aclk | Identifies a Microsoft Ad click (bing), is used for ad tracking.
+msclkid | Identifies a Microsoft Ad click (MS ad network), is used for ad tracking.
+twclid | Identifies a Twitter Ad click, is used for ad tracking.
+fbclid | Identifies a Facebook Ad click, is used for ad tracking.
+
 ## How it works
 
 The app works as a pair of middleware classes, that extract `utm_` values from
