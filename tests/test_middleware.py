@@ -1,11 +1,9 @@
 from unittest import mock
 
-import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.backends.base import SessionBase
 from django.http import HttpRequest, HttpResponse
-from django.test import Client
 
 from utm_tracker.middleware import LeadSourceMiddleware, UtmSessionMiddleware
 from utm_tracker.session import SESSION_KEY_UTM_PARAMS

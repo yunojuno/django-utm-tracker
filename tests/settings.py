@@ -1,9 +1,4 @@
-from distutils.version import StrictVersion
 from os import path
-
-import django
-
-DJANGO_VERSION = StrictVersion(django.get_version())
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -55,7 +50,7 @@ TEMPLATES = [
 
 STATIC_URL = "/static/"
 
-SECRET_KEY = "secret"
+SECRET_KEY = "secret"  # noqa: S105
 
 LOGGING = {
     "version": 1,
@@ -94,4 +89,5 @@ COVERAGE_MODULE_EXCLUDES = [
     "migrations",
 ]
 
-assert DEBUG, "This settings file can only be used with DEBUG=True"
+if not DEBUG:
+    raise Exception("This settings file can only be used with DEBUG=True")
