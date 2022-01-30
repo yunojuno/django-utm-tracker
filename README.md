@@ -28,14 +28,19 @@ msclkid | Identifies a Microsoft Ad click (MS ad network), is used for ad tracki
 twclid | Identifies a Twitter Ad click, is used for ad tracking.
 fbclid | Identifies a Facebook Ad click, is used for ad tracking.
 
+In addition to the fixed list above, you can also specify custom tags
+using the `UTM_TRACKER_CUSTOM_TAGS` setting. Any querystring params that
+match these tags are stashed in a JSONField called `custom_tags`.
+
 ## How it works
 
-The app works as a pair of middleware classes, that extract `utm_` values from
-any incoming request querystring, and then store those parameters against the
-request.user (if authenticated), or in the request.session (if not).
+The app works as a pair of middleware classes, that extract `utm_`
+values from any incoming request querystring, and then store those
+parameters against the request.user (if authenticated), or in the
+request.session (if not).
 
-The following shows this workflow (pseudocode - see `test_utm_and_lead_source`
-for a real example):
+The following shows this workflow (pseudocode - see
+`test_utm_and_lead_source` for a real example):
 
 ```python
 client = Client()
@@ -77,17 +82,19 @@ def referral(request, token):
 
 Add the app to `INSTALLED_APPS`:
 
-```
+```python
 # settings.py
 INSTALLED_APPS = [
     ...
     "utm_tracker"
 ]
+
+UTM_TRACKER_CUSTOM_TAGS = ["tag1", "tag2"]
 ```
 
 and add both middleware classes to `MIDDLEWARE`:
 
-```
+```python
 # settings.py
 MIDDLEWARE = [
     ...
