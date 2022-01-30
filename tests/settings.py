@@ -73,3 +73,7 @@ AUTH_USER_MODEL = "tests.User"
 
 if not DEBUG:
     raise Exception("This settings file can only be used with DEBUG=True")
+
+# == APP SETTINGS ==#
+
+UTM_TRACKER_CUSTOM_TAGS = ["mytag"]
