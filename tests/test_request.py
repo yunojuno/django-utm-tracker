@@ -1,12 +1,11 @@
 from unittest import mock
 
 from django.http import HttpRequest, QueryDict
-from django.test import RequestFactory
 
 from utm_tracker.request import parse_qs
 
 
-def test_parse_qs__ignores_non_utm():
+def test_parse_qs__ignores_non_utm() -> None:
     request = mock.Mock(spec=HttpRequest)
     request.GET = QueryDict(
         "utm_source=source"
@@ -25,7 +24,7 @@ def test_parse_qs__ignores_non_utm():
     }
 
 
-def test_parse_qs__ignores_empty_fields():
+def test_parse_qs__ignores_empty_fields() -> None:
     request = mock.Mock(spec=HttpRequest)
     request.GET = QueryDict(
         "utm_source=Source"
@@ -41,10 +40,10 @@ def test_parse_qs__ignores_empty_fields():
 
 
 @mock.patch("utm_tracker.request.CUSTOM_TAGS", ["tag1", "tag2"])
-def test_parse_qs__custom_tags(rf: RequestFactory) -> None:
+def test_parse_qs__custom_tags() -> None:
     request = mock.Mock(spec=HttpRequest)
     request.GET = QueryDict(
-        "utm_source=Source" "&utm_medium=Medium" "&tag1=foo&tag1=bar" "&tag2=baz"
+        "utm_source=Source&utm_medium=Medium&tag1=foo&tag1=bar&tag2=baz"
     )
     assert parse_qs(request) == {
         "utm_source": "source",
