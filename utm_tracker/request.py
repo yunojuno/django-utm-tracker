@@ -48,7 +48,8 @@ def parse_qs(request: HttpRequest) -> UtmParamsDict:
 
     # add in any custom tags we have decided to stash
     for tag in CUSTOM_TAGS:
-        if val := request.GET.get(tag):
-            utm_keys[tag] = val
+        # custom tags may be a list
+        if val := request.GET.getlist(tag):
+            utm_keys[tag] = ",".join(val)
 
     return utm_keys
