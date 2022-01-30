@@ -14,18 +14,21 @@ class LeadSourceManager(models.Manager):
     ) -> LeadSource:
         """Persist a LeadSource dictionary of utm_* values."""
         try:
+            params = utm_params.copy()
             return LeadSource.objects.create(
                 user=user,
-                medium=utm_params["utm_medium"],
-                source=utm_params["utm_source"],
-                campaign=utm_params.get("utm_campaign", ""),
-                term=utm_params.get("utm_term", ""),
-                content=utm_params.get("utm_content", ""),
-                gclid=utm_params.get("gclid", ""),
-                msclkid=utm_params.get("msclkid", ""),
-                aclk=utm_params.get("aclk", ""),
-                twclid=utm_params.get("twclid", ""),
-                fbclid=utm_params.get("fbclid", ""),
+                medium=params.pop("utm_medium"),
+                source=params.pop("utm_source"),
+                campaign=params.pop("utm_campaign", ""),
+                term=params.pop("utm_term", ""),
+                content=params.pop("utm_content", ""),
+                gclid=params.pop("gclid", ""),
+                msclkid=params.pop("msclkid", ""),
+                aclk=params.pop("aclk", ""),
+                twclid=params.pop("twclid", ""),
+                fbclid=params.pop("fbclid", ""),
+                # everything that hasn't already been popped is custom
+                custom_tags=params,
             )
         except KeyError as ex:
             raise ValueError(f"Missing utm param: {ex}")
@@ -133,6 +136,15 @@ class LeadSource(models.Model):
             "the user to the site, such as a banner ad or a text link."
         ),
         blank=True,
+    )
+    custom_tags = models.JSONField(
+        default=dict,
+        null=True,
+        blank=True,
+        help_text=(
+            "Dict of custom tag:value pairs as defined by the "
+            "UTM_TRACKER_CUSTOM_TAGS setting."
+        ),
     )
     timestamp = models.DateTimeField(
         default=timezone.now, help_text="When the event occurred."

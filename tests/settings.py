@@ -47,7 +47,6 @@ TEMPLATES = [
     }
 ]
 
-
 STATIC_URL = "/static/"
 
 SECRET_KEY = "secret"  # noqa: S105
@@ -71,23 +70,6 @@ LOGGING = {
 ROOT_URLCONF = "tests.urls"
 
 AUTH_USER_MODEL = "tests.User"
-
-###################################################
-# django_coverage overrides
-
-# Specify a list of regular expressions of module paths to exclude
-# from the coverage analysis. Examples are ``'tests$'`` and ``'urls$'``.
-# This setting is optional.
-COVERAGE_MODULE_EXCLUDES = [
-    "tests$",
-    "settings$",
-    "urls$",
-    "locale$",
-    "common.views.test",
-    "__init__",
-    "django",
-    "migrations",
-]
 
 if not DEBUG:
     raise Exception("This settings file can only be used with DEBUG=True")

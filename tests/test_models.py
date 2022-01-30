@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 from django.contrib.auth import get_user_model
 
@@ -7,6 +9,7 @@ User = get_user_model()
 
 
 @pytest.mark.django_db
+@mock.patch("utm_tracker.request.CUSTOM_TAGS", ["tag1", "tag2"])
 def test_create_from_utm_params():
     user = User.objects.create(username="Bob")
     utm_params = {
@@ -20,6 +23,8 @@ def test_create_from_utm_params():
         "msclkid": "3C5CHFA_enGB874GB874",
         "twclid": "4C5CHFA_enGB874GB874",
         "fbclid": "5C5CHFA_enGB874GB874",
+        "tag1": "foo",
+        "tag2": "bar",
     }
 
     ls_returned = LeadSource.objects.create_from_utm_params(user, utm_params)
@@ -38,6 +43,7 @@ def test_create_from_utm_params():
     assert ls.msclkid == "3C5CHFA_enGB874GB874"
     assert ls.twclid == "4C5CHFA_enGB874GB874"
     assert ls.fbclid == "5C5CHFA_enGB874GB874"
+    assert ls.custom_tags == {"tag1": "foo", "tag2": "bar"}
 
 
 @pytest.mark.django_db
