@@ -1,0 +1,3 @@
+## v1.1
+
+* Increase utm_content field length to 100 chars (thanks @roniemartinez)
