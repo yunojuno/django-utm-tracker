@@ -130,7 +130,7 @@ class LeadSource(models.Model):
         blank=True,
     )
     content = models.CharField(
-        max_length=50,
+        max_length=100,
         help_text=(
             "utm_content: Identifies what specifically was clicked to bring "
             "the user to the site, such as a banner ad or a text link."
