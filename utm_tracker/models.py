@@ -17,16 +17,16 @@ class LeadSourceManager(models.Manager):
             params = utm_params.copy()
             return LeadSource.objects.create(
                 user=user,
-                medium=params.pop("utm_medium"),
-                source=params.pop("utm_source"),
-                campaign=params.pop("utm_campaign", ""),
-                term=params.pop("utm_term", ""),
-                content=params.pop("utm_content", ""),
-                gclid=params.pop("gclid", ""),
-                msclkid=params.pop("msclkid", ""),
-                aclk=params.pop("aclk", ""),
-                twclid=params.pop("twclid", ""),
-                fbclid=params.pop("fbclid", ""),
+                medium=params.pop("utm_medium")[:100],
+                source=params.pop("utm_source")[:100],
+                campaign=params.pop("utm_campaign", "")[:100],
+                term=params.pop("utm_term", "")[:100],
+                content=params.pop("utm_content", "")[:100],
+                gclid=params.pop("gclid", "")[:255],
+                msclkid=params.pop("msclkid", "")[:255],
+                aclk=params.pop("aclk", "")[:255],
+                twclid=params.pop("twclid", "")[:255],
+                fbclid=params.pop("fbclid", "")[:255],
                 # everything that hasn't already been popped is custom
                 custom_tags=params,
             )
@@ -74,14 +74,14 @@ class LeadSource(models.Model):
         related_name="lead_sources",
     )
     medium = models.CharField(
-        max_length=30,
+        max_length=100,
         help_text=(
             "utm_medium: Identifies what type of link was used, "
             "such as cost per click or email."
         ),
     )
     source = models.CharField(
-        max_length=30,
+        max_length=100,
         help_text=(
             "utm_source: Identifies which site sent the traffic, "
             "and is a required parameter."
@@ -96,7 +96,7 @@ class LeadSource(models.Model):
         blank=True,
     )
     term = models.CharField(
-        max_length=50, help_text="utm_term: Identifies search terms.", blank=True
+        max_length=100, help_text="utm_term: Identifies search terms.", blank=True
     )
 
     gclid = models.CharField(
