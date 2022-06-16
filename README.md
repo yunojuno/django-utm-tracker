@@ -4,7 +4,7 @@ Django app for extracting and storing UTM tracking values.
 
 ## Django support
 
-This package supports Django 2.2+, and Python 3.7+
+This package supports Django 3.1+ (requires `JSONField`), and Python 3.7+.
 
 Previous supported version will be tagged in the repo, should you required them.
 

@@ -12,8 +12,6 @@ documentation = "https://github.com/yunojuno/django-utm-tracker"
 classifiers = [
     "Environment :: Web Environment",
     "Framework :: Django",
-    "Framework :: Django :: 2.2",
-    "Framework :: Django :: 3.0",
     "Framework :: Django :: 3.1",
     "Framework :: Django :: 3.2",
     "Framework :: Django :: 4.0",
@@ -29,7 +27,7 @@ packages = [{include="utm_tracker"}]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-django = "^2.2 || ^3.0 || ^4.0"
+django = "^3.1 || ^4.0"
 
 [tool.poetry.dev-dependencies]
 black = {version = "*", allow-prereleases = true}
