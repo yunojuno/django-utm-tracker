@@ -41,7 +41,8 @@ def parse_qs(request: HttpRequest) -> UtmParamsDict:
     }
 
     for ad_key in VALID_AD_PARAMS:
-        if akey := request.GET.get(ad_key):
+        akey = request.GET.get(ad_key)
+        if akey:
             # We don't want to lowercase the ad key, as they are
             # typically BASE64 encoded
             utm_keys[ad_key] = akey
@@ -49,7 +50,8 @@ def parse_qs(request: HttpRequest) -> UtmParamsDict:
     # add in any custom tags we have decided to stash
     for tag in CUSTOM_TAGS:
         # custom tags may be a list
-        if val := request.GET.getlist(tag):
+        val = request.GET.getlist(tag)
+        if val:
             utm_keys[tag] = ",".join(val)
 
     return utm_keys
