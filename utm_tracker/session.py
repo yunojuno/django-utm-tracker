@@ -55,5 +55,5 @@ def dump_utm_params(user: Any, session: SessionBase) -> List[LeadSource]:
         try:
             created.append(LeadSource.objects.create_from_utm_params(user, params))
         except ValueError as ex:
-            logger.debug(f"Unable to save utm_params: {params}: {ex}")
+            logger.debug("Unable to save utm_params: %s: %s", params, ex)
     return created
