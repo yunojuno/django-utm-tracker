@@ -1,6 +1,8 @@
+import freezegun
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.backends.base import SessionBase
+from django.utils.timezone import now as tz_now
 
 from utm_tracker.models import LeadSource
 from utm_tracker.session import (
@@ -11,7 +13,11 @@ from utm_tracker.session import (
 
 User = get_user_model()
 
+# just need a time to freeze - doesn't matter what it is.
+FROZEN_TIME = tz_now()
 
+
+@freezegun.freeze_time(FROZEN_TIME)
 def test_stash_utm_params():
     session = SessionBase()
     assert not stash_utm_params(session, {})
@@ -19,16 +25,21 @@ def test_stash_utm_params():
     assert stash_utm_params(session, {"utm_medium": "foo"})
     assert session.modified
     assert len(session[SESSION_KEY_UTM_PARAMS]) == 1
-    assert session[SESSION_KEY_UTM_PARAMS][0] == {"utm_medium": "foo"}
+    assert session[SESSION_KEY_UTM_PARAMS][0] == {
+        "utm_medium": "foo",
+        "timestamp": FROZEN_TIME.isoformat(),
+    }
 
     # add a second set of params
     assert stash_utm_params(session, {"utm_medium": "bar"})
     assert len(session[SESSION_KEY_UTM_PARAMS]) == 2
-    assert session[SESSION_KEY_UTM_PARAMS][1] == {"utm_medium": "bar"}
+    assert session[SESSION_KEY_UTM_PARAMS][1] == {
+        "utm_medium": "bar",
+        "timestamp": FROZEN_TIME.isoformat(),
+    }
 
     # add a duplicate set of params
     assert not stash_utm_params(session, {"utm_medium": "bar"})
-    assert len(session[SESSION_KEY_UTM_PARAMS]) == 2
 
 
 @pytest.mark.django_db

@@ -47,6 +47,7 @@ pre-commit = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-django = "*"
+pyyaml = "*"
 tox = "*"
 
 [build-system]

@@ -17,6 +17,7 @@ class LeadSourceManager(models.Manager):
             params = utm_params.copy()
             return LeadSource.objects.create(
                 user=user,
+                timestamp=params.pop("timestamp", None),
                 medium=params.pop("utm_medium")[:100],
                 source=params.pop("utm_source")[:100],
                 campaign=params.pop("utm_campaign", "")[:100],
@@ -147,7 +148,10 @@ class LeadSource(models.Model):
         ),
     )
     timestamp = models.DateTimeField(
-        default=timezone.now, help_text="When the event occurred."
+        default=None,
+        help_text="When the event occurred (if known).",
+        blank=True,
+        null=True,
     )
     created_at = models.DateTimeField(
         default=timezone.now, help_text="When the event was recorded."
