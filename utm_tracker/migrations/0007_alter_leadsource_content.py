@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("utm_tracker", "0006_leadsource_custom_tags"),
     ]
