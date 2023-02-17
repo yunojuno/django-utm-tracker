@@ -30,8 +30,8 @@ classifiers = [
 packages = [{include="utm_tracker"}]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-django = "^2.2 || ^3.0 || ^4.0"
+python = "^3.8"
+django = "^3.2 || ^4.0"
 
 [tool.poetry.dev-dependencies]
 black = {version = "*", allow-prereleases = true}

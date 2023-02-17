@@ -12,7 +12,7 @@ SESSION_KEY_UTM_PARAMS = "utm_params"
 logger = logging.getLogger(__name__)
 
 
-def strip_timestamps(params_list: list[UtmParamsDict]) -> list[UtmParamsDict]:
+def strip_timestamps(params_list: List[UtmParamsDict]) -> List[UtmParamsDict]:
     """
     Return a copy of the session params without timestamps.
 
