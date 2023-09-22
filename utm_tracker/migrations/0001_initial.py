@@ -29,14 +29,20 @@ class Migration(migrations.Migration):
                 (
                     "medium",
                     models.CharField(
-                        help_text="utm_medium: Identifies what type of link was used, such as cost per click or email.",
+                        help_text=(
+                            "utm_medium: Identifies what type of link was used, "
+                            "such as cost per click or email.",
+                        ),
                         max_length=10,
                     ),
                 ),
                 (
                     "source",
                     models.CharField(
-                        help_text="utm_source: Identifies which site sent the traffic, and is a required parameter.",
+                        help_text=(
+                            "utm_source: Identifies which site sent the traffic, "
+                            "and is a required parameter."
+                        ),
                         max_length=30,
                     ),
                 ),
@@ -44,7 +50,10 @@ class Migration(migrations.Migration):
                     "campaign",
                     models.CharField(
                         blank=True,
-                        help_text="utm_campaign: Identifies a specific product promotion or strategic campaign.",
+                        help_text=(
+                            "utm_campaign: Identifies a specific product "
+                            "promotion or strategic campaign."
+                        ),
                         max_length=100,
                     ),
                 ),
@@ -60,7 +69,11 @@ class Migration(migrations.Migration):
                     "content",
                     models.CharField(
                         blank=True,
-                        help_text="utm_content: Identifies what specifically was clicked to bring the user to the site, such as a banner ad or a text link.",
+                        help_text=(
+                            "utm_content: Identifies what specifically was "
+                            "clicked to bring the user to the site, "
+                            "such as a banner ad or a text link."
+                        ),
                         max_length=50,
                     ),
                 ),

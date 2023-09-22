@@ -14,7 +14,10 @@ class Migration(migrations.Migration):
             name="content",
             field=models.CharField(
                 blank=True,
-                help_text="utm_content: Identifies what specifically was clicked to bring the user to the site, such as a banner ad or a text link.",
+                help_text=(
+                    "utm_content: Identifies what specifically was clicked "
+                    "to bring the user to the site, such as a banner ad or a text link."
+                ),
                 max_length=100,
             ),
         ),
