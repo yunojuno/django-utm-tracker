@@ -18,6 +18,7 @@ classifiers = [
     "Framework :: Django :: 3.2",
     "Framework :: Django :: 4.0",
     "Framework :: Django :: 4.1",
+    "Framework :: Django :: 4.2",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
@@ -31,7 +32,7 @@ packages = [{include="utm_tracker"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-django = "^3.2 || ^4.0"
+django = "^3.2 || ^4.0 || ^5.0"
 
 [tool.poetry.dev-dependencies]
 black = "*"
