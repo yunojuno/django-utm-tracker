@@ -14,7 +14,10 @@ class Migration(migrations.Migration):
             name="gclid",
             field=models.CharField(
                 blank=True,
-                help_text="Identifies a google click, is used for ad tracking in Google Analytics via Google Ads",
+                help_text=(
+                    "Identifies a google click, is used for ad tracking in "
+                    "Google Analytics via Google Ads"
+                ),
                 max_length=255,
             ),
         ),

@@ -13,7 +13,10 @@ class Migration(migrations.Migration):
             model_name="leadsource",
             name="medium",
             field=models.CharField(
-                help_text="utm_medium: Identifies what type of link was used, such as cost per click or email.",
+                help_text=(
+                    "utm_medium: Identifies what type of link was used, "
+                    "such as cost per click or email."
+                ),
                 max_length=30,
             ),
         ),

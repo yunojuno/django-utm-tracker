@@ -14,7 +14,10 @@ class Migration(migrations.Migration):
             name="aclk",
             field=models.CharField(
                 blank=True,
-                help_text="Identifies a Microsoft Ad click (bing), is used for ad tracking.",
+                help_text=(
+                    "Identifies a Microsoft Ad click (bing), "
+                    "is used for ad tracking."
+                ),
                 max_length=255,
             ),
         ),
@@ -32,7 +35,10 @@ class Migration(migrations.Migration):
             name="msclkid",
             field=models.CharField(
                 blank=True,
-                help_text="Identifies a Microsoft Ad click (MS ad network), is used for ad tracking.",
+                help_text=(
+                    "Identifies a Microsoft Ad click (MS ad network), "
+                    "is used for ad tracking."
+                ),
                 max_length=255,
             ),
         ),

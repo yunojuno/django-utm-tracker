@@ -15,7 +15,10 @@ class Migration(migrations.Migration):
             field=models.JSONField(
                 blank=True,
                 default=dict,
-                help_text="Dict of custom tag:value pairs as defined by the UTM_TRACKER_CUSTOM_TAGS setting.",
+                help_text=(
+                    "Dict of custom tag:value pairs as defined by the "
+                    "UTM_TRACKER_CUSTOM_TAGS setting."
+                ),
                 null=True,
             ),
         ),
