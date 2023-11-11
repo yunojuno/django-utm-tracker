@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-utm-tracker"
-version = "1.3.1"
+version = "1.3.2"
 description = "Django app for extracting and storing UTM tracking values."
 license = "MIT"
 authors = ["YunoJuno <code@yunojuno.com>"]
@@ -12,21 +12,19 @@ documentation = "https://github.com/yunojuno/django-utm-tracker"
 classifiers = [
     "Environment :: Web Environment",
     "Framework :: Django",
-    "Framework :: Django :: 2.2",
-    "Framework :: Django :: 3.0",
-    "Framework :: Django :: 3.1",
     "Framework :: Django :: 3.2",
     "Framework :: Django :: 4.0",
     "Framework :: Django :: 4.1",
     "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 packages = [{include="utm_tracker"}]
 

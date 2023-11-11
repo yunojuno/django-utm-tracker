@@ -4,7 +4,7 @@ Django app for extracting and storing UTM tracking values.
 
 ## Django support
 
-This package support Django 3.2+, and Python 3.7+
+This package support Django 3.2+, and Python 3.8+
 
 ## Background
 
