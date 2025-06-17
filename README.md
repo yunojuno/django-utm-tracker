@@ -4,47 +4,43 @@ Django app for extracting and storing UTM tracking values.
 
 ## Django support
 
-This package support Django 3.2+, and Python 3.8+
+This package supports Django 4.2+, and Python 3.10+
 
 ## Background
 
-This app has been designed to integrate the standard `utm_*` querystring
-parameters that are used by online advertisers with your Django project.
+This app has been designed to integrate the standard `utm_*` querystring parameters that are used by
+online advertisers with your Django project.
 
-It does _not_ replace analytics (e.g. Google Analytics) and Adwords tracking,
-but does have one crucial difference - it allows you to assign a specific user
-to a campaign advert.
+It does _not_ replace analytics (e.g. Google Analytics) and Adwords tracking, but does have one
+crucial difference - it allows you to assign a specific user to a campaign advert.
 
-This may be useful if you are trying to assess the value of multiple channels /
-campaigns.
+This may be useful if you are trying to assess the value of multiple channels / campaigns.
 
 ### Supported querystring parameters
 
-Parameter | Definition
-:-- | :--
-utm_medium | Identifies what type of link was used.
-utm_source | Identifies which site sent the traffic, and is a required parameter.
-utm_campaign | Identifies a specific product promotion or strategic campaign.
-utm_term | Identifies search terms.
-gclid | Identifies a google click, is used for ad tracking in Google Analytics via Google Ads.
-aclk | Identifies a Microsoft Ad click (bing), is used for ad tracking.
-msclkid | Identifies a Microsoft Ad click (MS ad network), is used for ad tracking.
-twclid | Identifies a Twitter Ad click, is used for ad tracking.
-fbclid | Identifies a Facebook Ad click, is used for ad tracking.
+| Parameter    | Definition                                                                             |
+| :----------- | :------------------------------------------------------------------------------------- |
+| utm_medium   | Identifies what type of link was used.                                                 |
+| utm_source   | Identifies which site sent the traffic, and is a required parameter.                   |
+| utm_campaign | Identifies a specific product promotion or strategic campaign.                         |
+| utm_term     | Identifies search terms.                                                               |
+| gclid        | Identifies a google click, is used for ad tracking in Google Analytics via Google Ads. |
+| aclk         | Identifies a Microsoft Ad click (bing), is used for ad tracking.                       |
+| msclkid      | Identifies a Microsoft Ad click (MS ad network), is used for ad tracking.              |
+| twclid       | Identifies a Twitter Ad click, is used for ad tracking.                                |
+| fbclid       | Identifies a Facebook Ad click, is used for ad tracking.                               |
 
-In addition to the fixed list above, you can also specify custom tags
-using the `UTM_TRACKER_CUSTOM_TAGS` setting. Any querystring params that
-match these tags are stashed in a JSONField called `custom_tags`.
+In addition to the fixed list above, you can also specify custom tags using the
+`UTM_TRACKER_CUSTOM_TAGS` setting. Any querystring params that match these tags are stashed in a
+JSONField called `custom_tags`.
 
 ## How it works
 
-The app works as a pair of middleware classes, that extract `utm_`
-values from any incoming request querystring, and then store those
-parameters against the request.user (if authenticated), or in the
+The app works as a pair of middleware classes, that extract `utm_` values from any incoming request
+querystring, and then store those parameters against the request.user (if authenticated), or in the
 request.session (if not).
 
-The following shows this workflow (pseudocode - see
-`test_utm_and_lead_source` for a real example):
+The following shows this workflow (pseudocode - see `test_utm_and_lead_source` for a real example):
 
 ```python
 client = Client()
@@ -63,10 +59,10 @@ assert LeadSource.objects.count() == 1
 
 ### Why split the middleware in two?
 
-By splitting the middleware into two classes, we enable the use case where we
-can track leads without `utm_` querystring parameters. For instance, if you have
-an internal referral program, using a simple token, you can capture this as a
-`LeadSource` by adding sentinel values to the `request.session`:
+By splitting the middleware into two classes, we enable the use case where we can track leads
+without `utm_` querystring parameters. For instance, if you have an internal referral program, using
+a simple token, you can capture this as a `LeadSource` by adding sentinel values to the
+`request.session`:
 
 ```python
 def referral(request, token):
