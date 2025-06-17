@@ -15,8 +15,7 @@ class Migration(migrations.Migration):
             field=models.CharField(
                 blank=True,
                 help_text=(
-                    "Identifies a Microsoft Ad click (bing), "
-                    "is used for ad tracking."
+                    "Identifies a Microsoft Ad click (bing), is used for ad tracking."
                 ),
                 max_length=255,
             ),
