@@ -16,6 +16,7 @@ classifiers = [
     "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
     "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
@@ -28,7 +29,7 @@ packages = [{include="utm_tracker"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-django = "^4.2 || ^5.0"
+django = "^4.2 || ^5.0 || ^6.0"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "*"
